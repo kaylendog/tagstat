@@ -1,0 +1,45 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Post {
+  id   Int   @id
+  tags Tag[]
+}
+
+model Tag {
+  id                   Int              @id
+  name String 
+  category             TagCategory
+  outgoingImplications TagImplication[] @relation(name: "impliesOut")
+  incomingImplications TagImplication[] @relation(name: "impliesIn")
+  posts                Post[]
+  count Int
+}
+
+enum TagCategory {
+  General
+  Artist
+  Copyright
+  Character
+  Species
+  Invalid
+  Meta
+  Lore
+}
+
+model TagImplication {
+  id        Int @id
+  tag       Tag @relation(name: "impliesOut", fields: [tagId], references: [id])
+  tagId     Int
+  implies   Tag @relation(name: "impliesIn", fields: [impliesId], references: [id])
+  impliesId Int
+}

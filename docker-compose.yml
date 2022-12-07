@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:alpine
+    networks:
+      default:
+        ipv4_address: 172.31.0.2
+    environment:
+      - POSTGRES_PASSWORD=password
+
+networks:
+  default:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.31.0.0/16
+          gateway: 172.31.0.1
